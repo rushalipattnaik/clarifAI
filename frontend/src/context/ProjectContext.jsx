@@ -7,13 +7,19 @@ export function ProjectProvider({ children }) {
 
   const [answers, setAnswers] = useState({});
 
+  const [report, setReport] = useState(null);
+
   return (
     <ProjectContext.Provider
       value={{
         projectIdea,
         setProjectIdea,
+
         answers,
         setAnswers,
+
+        report,
+        setReport,
       }}
     >
       {children}

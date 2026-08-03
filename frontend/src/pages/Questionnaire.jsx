@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 import { questions } from "../data/questions";
@@ -17,7 +18,8 @@ function Questionnaire() {
     projectIdea,
     answers,
     setAnswers,
-  } = useProject();
+    setReport,
+} = useProject();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
@@ -30,36 +32,51 @@ function Questionnaire() {
 
   }
 
-  function nextQuestion() {
+  async function nextQuestion() {
 
-    const id = questions[currentQuestion].id;
+  const id = questions[currentQuestion].id;
 
-    if (!answers[id]) {
+  if (!answers[id]) {
+    alert("Please select an answer.");
+    return;
+  }
 
-      alert("Please select an answer.");
+  if (currentQuestion === questions.length - 1) {
 
-      return;
-    }
+    try {
 
-    if (currentQuestion === questions.length - 1) {
+      const response = await api.post("/clarify/", {
+
+        project: projectIdea,
+
+        answers: answers,
+
+      });
+
+      setReport(response.data);
 
       navigate("/report");
 
-      return;
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Backend connection failed.");
 
     }
 
-    setCurrentQuestion(currentQuestion + 1);
+    return;
 
   }
 
-  function previousQuestion() {
+  setCurrentQuestion(currentQuestion + 1);
 
-    if (currentQuestion === 0) return;
-
+}
+function previousQuestion() {
+  if (currentQuestion > 0) {
     setCurrentQuestion(currentQuestion - 1);
-
   }
+}
 
   return (
 
@@ -103,16 +120,11 @@ function Questionnaire() {
         />
 
         <NavigationButtons
-
           onNext={nextQuestion}
-
           onPrevious={previousQuestion}
-
-          isLast={
-            currentQuestion === questions.length - 1
-          }
-
-        />
+          isFirst={currentQuestion === 0}
+          isLast={currentQuestion === questions.length - 1}
+  />
 
       </div>
 

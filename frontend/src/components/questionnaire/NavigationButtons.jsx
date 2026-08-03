@@ -1,21 +1,27 @@
 function NavigationButtons({
   onNext,
   onPrevious,
-  isLast
+  isLast,
+  isFirst,
 }) {
   return (
     <div className="mt-10 flex justify-between">
 
       <button
         onClick={onPrevious}
-        className="rounded-lg bg-slate-700 px-6 py-3"
+        disabled={isFirst}
+        className={`rounded-lg px-6 py-3 transition ${
+          isFirst
+            ? "cursor-not-allowed bg-slate-800 text-slate-500"
+            : "bg-slate-700 hover:bg-slate-600"
+        }`}
       >
         Previous
       </button>
 
       <button
         onClick={onNext}
-        className="rounded-lg bg-indigo-600 px-6 py-3"
+        className="rounded-lg bg-indigo-600 px-6 py-3 hover:bg-indigo-500 transition"
       >
         {isLast ? "Generate Report" : "Next"}
       </button>

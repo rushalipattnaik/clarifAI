@@ -1,21 +1,20 @@
 from fastapi import APIRouter
 
 from app.models.request_models import ClarifyRequest
+from app.services.ai_service import generate_mock_report
 
 router = APIRouter(
     prefix="/clarify",
     tags=["Clarification"]
 )
 
+
 @router.post("/")
 def clarify(request: ClarifyRequest):
 
-    return {
+    report = generate_mock_report(
+        request.project,
+        request.answers
+    )
 
-        "project": request.project,
-
-        "answers": request.answers,
-
-        "status": "received"
-
-    }
+    return report
