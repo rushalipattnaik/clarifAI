@@ -2,69 +2,45 @@ import { useProject } from "../hooks/useProject";
 
 function Report() {
 
-  const { report } = useProject();
+    const { report } = useProject();
 
-  if (!report) {
+    if (!report) {
+
+        return (
+            <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+                No report generated.
+            </div>
+        );
+
+    }
 
     return (
 
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+        <div className="min-h-screen bg-slate-950 text-white px-8 py-10">
 
-        No report generated.
+            <div className="mx-auto max-w-5xl">
 
-      </div>
+                <h1 className="text-4xl font-bold mb-8">
+                    AI Generated Requirement Report
+                </h1>
 
-    );
+                <div className="rounded-xl bg-slate-900 p-8">
 
-  }
+                    <h2 className="text-2xl font-semibold mb-3">
+                        {report.project}
+                    </h2>
 
-  return (
+                    <pre className="whitespace-pre-wrap leading-8">
+                        {report.report}
+                    </pre>
 
-    <div className="min-h-screen bg-slate-950 p-10 text-white">
+                </div>
 
-      <h1 className="mb-8 text-4xl font-bold">
-
-        ClarifAI Report
-
-      </h1>
-
-      <div className="rounded-xl bg-slate-900 p-8">
-
-        <h2 className="mb-4 text-2xl">
-
-          Project
-
-        </h2>
-
-        <p className="mb-6 text-indigo-400">
-
-          {report.project}
-
-        </p>
-
-        <h2 className="mb-4 text-2xl">
-
-          Generated Prompt
-
-        </h2>
-
-        <pre className="overflow-auto rounded-lg bg-slate-800 p-6 whitespace-pre-wrap">
-
-        {report.prompt}
-
-        </pre>
-
-        <div className="mt-8 rounded-lg bg-green-700 p-4">
-
-          ✅ Prompt Builder Ready
+            </div>
 
         </div>
 
-      </div>
-
-    </div>
-
-  );
+    );
 
 }
 

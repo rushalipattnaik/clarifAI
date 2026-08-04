@@ -1,11 +1,17 @@
 from app.services.prompt_builder import build_prompt
+from app.services.gemini_client import generate
 
 
-def generate_mock_report(project, answers):
-    prompt = build_prompt(project, answers)
+def generate_report(project, answers):
+
+    prompt = build_prompt(
+        project,
+        answers
+    )
+
+    ai_response = generate(prompt)
 
     return {
         "project": project,
-        "prompt": prompt,
-        "status": "ready_for_ai"
+        "report": ai_response
     }
