@@ -45,17 +45,16 @@ function Questionnaire() {
 
     try {
 
-      const response = await api.post("/clarify/", {
+        const response = await api.post("/clarify/", {
+    project: projectIdea,
+    answers: answers,
+  });
 
-        project: projectIdea,
+  console.log(response.data); // optional for debugging
 
-        answers: answers,
+  setReport(response.data.report);
 
-      });
-
-      setReport(response.data);
-
-      navigate("/report");
+  navigate("/report");
 
     } catch (error) {
 

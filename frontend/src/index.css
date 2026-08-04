@@ -1,19 +1,108 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* ------------------------------- */
+/* Markdown Styling */
+/* ------------------------------- */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.prose {
+    color: white;
 }
 
-html {
-  scroll-behavior: smooth;
+.prose h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
-body {
-  background: #020617;
-  color: white;
-  font-family: "Inter", sans-serif;
+.prose h2 {
+    font-size: 1.9rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.prose h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: .8rem;
+}
+
+.prose p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.prose ul {
+    margin-left: 1.5rem;
+    list-style: disc;
+}
+
+.prose ol {
+    margin-left: 1.5rem;
+    list-style: decimal;
+}
+
+.prose li {
+    margin-bottom: .5rem;
+}
+
+.prose hr {
+    margin: 2rem 0;
+    border-color: #334155;
+}
+
+.prose blockquote {
+    border-left: 4px solid #6366f1;
+    padding-left: 1rem;
+    color: #cbd5e1;
+}
+
+.prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+}
+
+.prose table,
+.prose th,
+.prose td {
+    border: 1px solid #475569;
+}
+
+.prose th {
+    background: #1e293b;
+    padding: 12px;
+}
+
+.prose td {
+    padding: 12px;
+}
+
+.prose code {
+    background: #1e293b;
+    padding: 3px 6px;
+    border-radius: 5px;
+    color: #facc15;
+}
+
+.prose pre {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+.prose a {
+    color: #60a5fa;
+}
+
+.prose strong {
+    color: white;
+}
+
+.prose em {
+    color: #cbd5e1;
 }

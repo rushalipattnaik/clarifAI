@@ -1,47 +1,50 @@
 import { useProject } from "../hooks/useProject";
+import MarkdownRenderer from "../components/MarkdownRenderer";
 
 function Report() {
+  const { report } = useProject();
 
-    const { report } = useProject();
-
-    if (!report) {
-
-        return (
-            <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-                No report generated.
-            </div>
-        );
-
-    }
-
+  if (!report) {
     return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+        <div className="rounded-xl bg-slate-900 p-8 shadow-lg">
+          <h2 className="text-2xl font-bold text-red-400">
+            No Report Available
+          </h2>
 
-        <div className="min-h-screen bg-slate-950 text-white px-8 py-10">
+          <p className="mt-4 text-slate-300">
+            Please complete the questionnaire first.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-            <div className="mx-auto max-w-5xl">
+  return (
+    <div className="min-h-screen bg-slate-950 px-6 py-10 text-white">
 
-                <h1 className="text-4xl font-bold mb-8">
-                    AI Generated Requirement Report
-                </h1>
+      <div className="mx-auto max-w-6xl">
 
-                <div className="rounded-xl bg-slate-900 p-8">
+        <h1 className="mb-8 text-center text-4xl font-bold">
+          Software Requirements Specification
+        </h1>
 
-                    <h2 className="text-2xl font-semibold mb-3">
-                        {report.project}
-                    </h2>
+        <div className="rounded-xl border border-slate-700 bg-slate-900 p-8 shadow-2xl">
 
-                    <pre className="whitespace-pre-wrap leading-8">
-                        {report.report}
-                    </pre>
-
-                </div>
-
-            </div>
+          {typeof report === "string" ? (
+                <MarkdownRenderer content={report} />
+            ) : (
+                <p className="text-red-400">
+                    Invalid report format received from backend.
+                </p>
+            )}
 
         </div>
 
-    );
+      </div>
 
+    </div>
+  );
 }
 
 export default Report;
