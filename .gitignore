@@ -1,37 +1,8 @@
-# =====================================
-# AI Development Notes (Private)
-# =====================================
+# AI Notes
 .notes/
+notes/
 
-# =====================================
 # Environment Variables
-# =====================================
-backend/.env
-
-# =====================================
-# Python
-# =====================================
-backend/venv/
-backend/__pycache__/
-*.pyc
-
-# =====================================
-# Node
-# =====================================
-frontend/node_modules/
-frontend/dist/
-
-# =====================================
-# Logs
-# =====================================
-*.log
-
-# =====================================
-# OS Files
-# =====================================
-.DS_Store
-Thumbs.db
-# Environment files
 .env
 backend/.env
 frontend/.env
@@ -39,6 +10,15 @@ frontend/.env
 # Python
 backend/venv/
 __pycache__/
+*.pyc
 
-# AI Notes
-notes/
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

@@ -46,8 +46,8 @@ function Questionnaire() {
     try {
 
         const response = await api.post("/clarify/", {
-    project: projectIdea,
-    answers: answers,
+            project: projectIdea,
+            answers: answers,
   });
 
   console.log(response.data); // optional for debugging

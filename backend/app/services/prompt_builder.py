@@ -1,39 +1,55 @@
 def build_prompt(project, answers):
-    prompt = f"""
-You are an experienced Software Business Analyst.
 
-Your task is to convert the following project idea into a professional Software Requirements Specification.
-
-Project Name:
-{project}
-
-User Responses:
-"""
+    answer_text = ""
 
     for key, value in answers.items():
-        prompt += f"\nQuestion {key}: {value}"
+        answer_text += f"{key}: {value}\n"
 
-    prompt += """
+    prompt = f"""
+You are a Senior Software Business Analyst with 15+ years of experience.
 
-Generate the following sections:
+Your task is to generate a complete Software Requirements Specification (SRS).
 
-1. Project Overview
+IMPORTANT RULES
 
-2. Functional Requirements
+- Never invent features.
+- Never assume technologies.
+- Never add authentication methods not selected.
+- Never add payment gateways unless specified.
+- Never add dashboards unless requested.
+- Never change the project name.
+- Expand only what the user has provided.
+- Write professionally.
+- Output ONLY Markdown.
+- Follow IEEE SRS formatting.
 
-3. Non-Functional Requirements
+The document MUST contain:
 
-4. User Stories
+# Software Requirements Specification
 
-5. Acceptance Criteria
+## 1. Project Overview
 
-6. MVP Features
+## 2. Functional Requirements
 
-7. Future Enhancements
+## 3. Non Functional Requirements
 
-8. Risks and Assumptions
+## 4. User Stories
 
-Respond in Markdown format.
+## 5. Acceptance Criteria
+
+## 6. MVP Features
+
+## 7. Future Enhancements
+
+## 8. Risks and Assumptions
+
+Project Idea
+
+{project}
+
+Clarification Answers
+
+{answer_text}
 """
 
     return prompt
