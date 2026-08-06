@@ -3,35 +3,32 @@ def build_prompt(project, answers):
     answer_text = ""
 
     for key, value in answers.items():
-        answer_text += f"{key}: {value}\n"
+        answer_text += f"- {key}: {value}\n"
 
-    prompt = f"""
-You are a Senior Software Business Analyst with 15+ years of experience.
+    return f"""
+You are an experienced Senior Software Business Analyst.
 
-Your task is to generate a complete Software Requirements Specification (SRS).
+Your responsibility is to produce a professional IEEE-style Software Requirements Specification (SRS).
 
-IMPORTANT RULES
+## Instructions
 
-- Never invent features.
-- Never assume technologies.
-- Never add authentication methods not selected.
-- Never add payment gateways unless specified.
-- Never add dashboards unless requested.
-- Never change the project name.
-- Expand only what the user has provided.
-- Write professionally.
-- Output ONLY Markdown.
-- Follow IEEE SRS formatting.
+- Use the project idea and clarification answers as the primary source.
+- Expand the requirements with reasonable implementation details.
+- Do NOT contradict the user's choices.
+- If important details are missing, make clearly labeled recommendations rather than pretending they were specified.
+- Maintain a professional tone.
+- Output valid Markdown only.
+- Do not wrap the response in triple backticks.
 
-The document MUST contain:
+Generate the following sections exactly in this order:
 
-# Software Requirements Specification
+# Software Requirements Specification (SRS)
 
 ## 1. Project Overview
 
 ## 2. Functional Requirements
 
-## 3. Non Functional Requirements
+## 3. Non-Functional Requirements
 
 ## 4. User Stories
 
@@ -41,7 +38,18 @@ The document MUST contain:
 
 ## 7. Future Enhancements
 
-## 8. Risks and Assumptions
+## 8. Risks & Assumptions
+
+## 9. AI Recommendations
+
+In the AI Recommendations section:
+- List missing requirements.
+- Suggest security improvements.
+- Suggest scalability improvements.
+- Suggest performance improvements.
+- Suggest future integrations.
+
+---
 
 Project Idea
 
@@ -51,5 +59,3 @@ Clarification Answers
 
 {answer_text}
 """
-
-    return prompt

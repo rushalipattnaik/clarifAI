@@ -22,6 +22,7 @@ function Questionnaire() {
 } = useProject();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   function selectAnswer(answer) {
 
@@ -45,16 +46,16 @@ function Questionnaire() {
 
     try {
 
+      setLoading(true);
+
         const response = await api.post("/clarify/", {
-            project: projectIdea,
-            answers: answers,
-  });
+    project: projectIdea,
+    answers: answers,
+});
 
-  console.log(response.data); // optional for debugging
+setReport(response.data.report);
 
-  setReport(response.data.report);
-
-  navigate("/report");
+navigate("/report");
 
     } catch (error) {
 
@@ -63,6 +64,11 @@ function Questionnaire() {
       alert("Backend connection failed.");
 
     }
+    finally{
+
+    setLoading(false);
+
+}
 
     return;
 
@@ -123,6 +129,7 @@ function previousQuestion() {
           onPrevious={previousQuestion}
           isFirst={currentQuestion === 0}
           isLast={currentQuestion === questions.length - 1}
+          loading={loading}
   />
 
       </div>

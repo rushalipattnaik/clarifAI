@@ -31,13 +31,7 @@ function Report() {
 
         <div className="rounded-xl border border-slate-700 bg-slate-900 p-8 shadow-2xl">
 
-          {typeof report === "string" ? (
-                <MarkdownRenderer content={report} />
-            ) : (
-                <p className="text-red-400">
-                    Invalid report format received from backend.
-                </p>
-            )}
+          <MarkdownRenderer content={report} />
 
         </div>
 

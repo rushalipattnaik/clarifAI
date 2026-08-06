@@ -1,11 +1,15 @@
-def clean_markdown(text):
+import re
 
-    if not text:
+
+def clean_markdown(markdown: str):
+
+    if markdown is None:
         return ""
 
-    text = text.replace("\r\n", "\n")
+    markdown = markdown.replace("\r\n", "\n")
 
-    while "\n\n\n" in text:
-        text = text.replace("\n\n\n", "\n\n")
+    markdown = re.sub(r"\n{3,}", "\n\n", markdown)
 
-    return text.strip()
+    markdown = markdown.strip()
+
+    return markdown
