@@ -2,7 +2,10 @@ from fastapi import APIRouter
 from app.models.schemas import ClarifyRequest
 from app.services.ai_service import generate_report
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/clarify",
+    tags=["Clarify"]
+)
 
 @router.post("/")
 def clarify(request: ClarifyRequest):

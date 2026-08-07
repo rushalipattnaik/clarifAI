@@ -59,11 +59,17 @@ navigate("/report");
 
     } catch (error) {
 
-      console.error(error);
+  console.error("FULL ERROR:", error);
 
-      alert("Backend connection failed.");
+  if (error.response) {
+    console.error("Response Data:", error.response.data);
+    console.error("Status:", error.response.status);
+    alert(JSON.stringify(error.response.data, null, 2));
+  } else {
+    alert(error.message);
+  }
 
-    }
+}
     finally{
 
     setLoading(false);
