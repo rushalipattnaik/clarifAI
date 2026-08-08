@@ -4,28 +4,26 @@ import DownloadPDFButton from "./DownloadPDFButton";
 import PrintButton from "./PrintButton";
 
 function ReportToolbar({
-    report,
-    onDownloadPDF,
+  report,
+  onDownloadPDF,
+  isGeneratingPDF,
 }) {
+  return (
+    <div className="mb-8 flex flex-wrap gap-3">
 
-    return (
+      <CopyButton report={report} />
 
-        <div className="mb-8 flex flex-wrap gap-3">
+      <DownloadMarkdownButton report={report} />
 
-            <CopyButton report={report} />
+      <DownloadPDFButton
+        onDownloadPDF={onDownloadPDF}
+        isGeneratingPDF={isGeneratingPDF}
+      />
 
-            <DownloadMarkdownButton report={report} />
+      <PrintButton />
 
-            <DownloadPDFButton
-                onDownloadPDF={onDownloadPDF}
-            />
-
-            <PrintButton />
-
-        </div>
-
-    );
-
+    </div>
+  );
 }
 
 export default ReportToolbar;
