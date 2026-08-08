@@ -3,15 +3,16 @@ function NavigationButtons({
   onPrevious,
   isLast,
   isFirst,
+  isGenerating,
 }) {
   return (
     <div className="mt-10 flex justify-between">
 
       <button
         onClick={onPrevious}
-        disabled={isFirst}
+        disabled={isFirst || isGenerating}
         className={`rounded-lg px-6 py-3 transition ${
-          isFirst
+          isFirst || isGenerating
             ? "cursor-not-allowed bg-slate-800 text-slate-500"
             : "bg-slate-700 hover:bg-slate-600"
         }`}
@@ -21,9 +22,18 @@ function NavigationButtons({
 
       <button
         onClick={onNext}
-        className="rounded-lg bg-indigo-600 px-6 py-3 hover:bg-indigo-500 transition"
+        disabled={isGenerating}
+        className={`rounded-lg px-6 py-3 transition ${
+          isGenerating
+            ? "cursor-not-allowed bg-indigo-900 text-indigo-300"
+            : "bg-indigo-600 hover:bg-indigo-500"
+        }`}
       >
-        {isLast ? "Generate Report" : "Next"}
+        {isGenerating
+          ? "Generating SRS..."
+          : isLast
+          ? "Generate Report"
+          : "Next"}
       </button>
 
     </div>

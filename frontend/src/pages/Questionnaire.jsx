@@ -22,6 +22,8 @@ function Questionnaire() {
 } = useProject();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   function selectAnswer(answer) {
@@ -34,54 +36,60 @@ function Questionnaire() {
   }
 
   async function nextQuestion() {
-
   const id = questions[currentQuestion].id;
 
   if (!answers[id]) {
-    alert("Please select an answer.");
+    setError("Please select an answer before continuing.");
     return;
   }
+
+  setError("");
 
   if (currentQuestion === questions.length - 1) {
-
     try {
+      setIsGenerating(true);
 
-      setLoading(true);
+      const response = await api.post("/clarify/", {
+        project: projectIdea,
+        answers: answers,
+      });
 
-        const response = await api.post("/clarify/", {
-    project: projectIdea,
-    answers: answers,
-});
+      if (!response.data || typeof response.data.report !== "string") {
+        throw new Error("Invalid report received from backend.");
+      }
 
-setReport(response.data.report);
+      setReport(response.data.report);
 
-navigate("/report");
+      navigate("/report");
 
     } catch (error) {
+      console.error("Report generation failed:", error);
 
-  console.error("FULL ERROR:", error);
+      if (error.response) {
+        setError(
+          `Backend error: ${
+            error.response.data?.detail ||
+            "The server could not generate the report."
+          }`
+        );
+      } else if (error.request) {
+        setError(
+          "Unable to connect to the ClarifAI backend. Please make sure FastAPI is running."
+        );
+      } else {
+        setError(
+          error.message || "Something went wrong while generating the report."
+        );
+      }
 
-  if (error.response) {
-    console.error("Response Data:", error.response.data);
-    console.error("Status:", error.response.status);
-    alert(JSON.stringify(error.response.data, null, 2));
-  } else {
-    alert(error.message);
-  }
-
-}
-    finally{
-
-    setLoading(false);
-
-}
+    } finally {
+      setIsGenerating(false);
+    }
 
     return;
-
   }
 
   setCurrentQuestion(currentQuestion + 1);
-
 }
 function previousQuestion() {
   if (currentQuestion > 0) {
@@ -113,10 +121,11 @@ function previousQuestion() {
 
         </p>
 
-        <ProgressBar
-          current={currentQuestion + 1}
-          total={questions.length}
-        />
+        {error && (
+          <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-300">
+             {error}
+          </div>
+        )}
 
         <QuestionCard
 
@@ -135,8 +144,8 @@ function previousQuestion() {
           onPrevious={previousQuestion}
           isFirst={currentQuestion === 0}
           isLast={currentQuestion === questions.length - 1}
-          loading={loading}
-  />
+          isGenerating={isGenerating}
+        />
 
       </div>
 
