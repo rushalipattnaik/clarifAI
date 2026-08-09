@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.auth.database import initialize_database
+
 from app.routes.clarify import router as clarify_router
+from app.routes.auth import router as auth_router
+
 
 app = FastAPI(title="ClarifAI API")
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,10 +18,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+initialize_database()
+
+
 app.include_router(clarify_router)
+app.include_router(auth_router)
+
 
 @app.get("/")
 def root():
+
     return {
         "message": "ClarifAI Backend Running"
     }
