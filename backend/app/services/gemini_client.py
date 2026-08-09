@@ -1,26 +1,28 @@
-import google.generativeai as genai
+from google import genai
 
-from app.config import GEMINI_API_KEY
-
-genai.configure(api_key=GEMINI_API_KEY)
+from app.config import GEMINI_API_KEY, GEMINI_MODEL
 
 
-def generate_text(prompt: str):
+client = genai.Client(api_key=GEMINI_API_KEY)
+
+
+def generate_text(prompt: str) -> str:
+    """
+    Send a prompt to Gemini and return the generated text.
+    """
 
     try:
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=prompt,
+        )
 
-        model = genai.GenerativeModel("gemini-flash-latest")
-
-        response = model.generate_content(prompt)
+        if not response.text:
+            raise ValueError("Gemini returned an empty response.")
 
         return response.text
 
     except Exception as e:
-
-        return f"""
-# Error
-
-Gemini API failed.
-
-{str(e)}
-"""
+        raise RuntimeError(
+            f"Gemini API generation failed: {str(e)}"
+        ) from e
