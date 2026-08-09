@@ -10,15 +10,15 @@ load_dotenv(BASE_DIR / ".env")
 
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-GEMINI_MODEL = os.getenv(
-    "GEMINI_MODEL",
-    "gemini-2.5-flash"
-)
+GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 
 
 if not GEMINI_API_KEY:
-    raise ValueError(
-        "Gemini API Key not found. "
-        "Please check backend/.env"
-    )
+    raise ValueError("Gemini API Key not found.")
+
+if not GEMINI_MODEL:
+    raise ValueError("Gemini model not configured.")
+
+
+print("✅ Gemini API Loaded")
+print(f"✅ Gemini Model: {GEMINI_MODEL}")
