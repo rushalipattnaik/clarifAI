@@ -4,9 +4,7 @@ export const ProjectContext = createContext();
 
 export function ProjectProvider({ children }) {
   const [projectIdea, setProjectIdea] = useState("");
-
   const [answers, setAnswers] = useState({});
-
   const [report, setReport] = useState(null);
 
   return (
@@ -14,10 +12,8 @@ export function ProjectProvider({ children }) {
       value={{
         projectIdea,
         setProjectIdea,
-
         answers,
         setAnswers,
-
         report,
         setReport,
       }}
