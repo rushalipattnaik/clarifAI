@@ -6,26 +6,24 @@ import Report from "./pages/Report";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
-import { AuthProvider } from "./context/AuthContext";
-
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
 
-          <Route path="/" element={<Home />} />
+      <Routes>
 
-          <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
 
-          <Route path="/signup" element={<Signup />} />
+        <Route path="/questions" element={<Questionnaire />} />
 
-          <Route path="/questions" element={<Questionnaire />} />
+        <Route path="/report" element={<Report />} />
 
-          <Route path="/report" element={<Report />} />
+        <Route path="/login" element={<Login />} />
 
-        </Routes>
-      </AuthProvider>
+        <Route path="/signup" element={<Signup />} />
+
+      </Routes>
+
     </BrowserRouter>
   );
 }
