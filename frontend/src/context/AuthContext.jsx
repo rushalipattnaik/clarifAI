@@ -1,35 +1,33 @@
-import { createContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useEffect, useState } from "react";
+import api from "../services/api";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const navigate = useNavigate();
-
   const [token, setToken] = useState(
     localStorage.getItem("clarifai_token")
   );
 
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("clarifai_token")
-  );
+  const isAuthenticated = !!token;
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("clarifai_token", token);
+
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    } else {
+      localStorage.removeItem("clarifai_token");
+
+      delete api.defaults.headers.common.Authorization;
+    }
+  }, [token]);
 
   function login(accessToken) {
-    localStorage.setItem("clarifai_token", accessToken);
-
     setToken(accessToken);
-    setIsAuthenticated(true);
-
-    navigate("/");
   }
 
   function logout() {
-    localStorage.removeItem("clarifai_token");
-
     setToken(null);
-    setIsAuthenticated(false);
-
-    navigate("/");
   }
 
   return (

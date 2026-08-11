@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import api from "../services/api";
+import { useAuth } from "../hooks/useAuth";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,7 +14,7 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  async function handleLogin(e) {
     e.preventDefault();
 
     setError("");
@@ -23,29 +26,24 @@ function Login() {
         password,
       });
 
-      localStorage.setItem(
-        "access_token",
-        response.data.access_token
-      );
+      login(response.data.access_token);
 
       navigate("/");
     } catch (err) {
       setError(
         err.response?.data?.detail ||
-        "Login failed. Please check your credentials."
+          "Unable to login. Please check your credentials."
       );
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
-
-      <div className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
-
+      <div className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-900 p-8 shadow-2xl">
         <h1 className="text-center text-3xl font-bold">
-          Sign In
+          Welcome Back
         </h1>
 
         <p className="mt-2 text-center text-slate-400">
@@ -53,16 +51,12 @@ function Login() {
         </p>
 
         {error && (
-          <div className="mt-6 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+          <div className="mt-6 rounded-lg border border-red-800 bg-red-950/40 p-3 text-sm text-red-400">
             {error}
           </div>
         )}
 
-        <form
-          onSubmit={handleLogin}
-          className="mt-6 space-y-5"
-        >
-
+        <form onSubmit={handleLogin} className="mt-6 space-y-5">
           <div>
             <label className="mb-2 block text-sm text-slate-300">
               Email
@@ -73,7 +67,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-indigo-500"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-indigo-500"
               placeholder="you@example.com"
             />
           </div>
@@ -88,7 +82,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-indigo-500"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-indigo-500"
               placeholder="Enter your password"
             />
           </div>
@@ -96,11 +90,10 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-medium transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-medium transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Signing In..." : "Sign In"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-400">
@@ -112,9 +105,7 @@ function Login() {
             Create one
           </Link>
         </p>
-
       </div>
-
     </div>
   );
 }
