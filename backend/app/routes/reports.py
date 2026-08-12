@@ -1,14 +1,8 @@
-import json
-
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.auth.database import get_connection
-from app.auth.dependencies import get_current_user_id
-
-from app.models.schemas import (
-    CreateReportRequest,
-    ReportResponse,
-)
+from app.auth.dependencies import get_current_user
+from app.models.schemas import CreateReportRequest
 
 
 router = APIRouter(
@@ -17,145 +11,110 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=ReportResponse)
+@router.post("/")
 def create_report(
     request: CreateReportRequest,
-    user_id: int = Depends(get_current_user_id),
+    user_id: int = Depends(get_current_user),
 ):
-
     connection = get_connection()
 
-    cursor = connection.cursor()
+    try:
+        cursor = connection.cursor()
 
-    cursor.execute(
-        """
-        INSERT INTO reports (
-            user_id,
-            project,
-            answers,
-            report
+        cursor.execute(
+            """
+            INSERT INTO reports (user_id, project, report)
+            VALUES (?, ?, ?)
+            """,
+            (
+                user_id,
+                request.project,
+                request.report,
+            ),
         )
-        VALUES (?, ?, ?, ?)
-        """,
-        (
-            user_id,
-            request.project,
-            json.dumps(request.answers),
-            request.report,
-        ),
-    )
 
-    connection.commit()
+        connection.commit()
 
-    report_id = cursor.lastrowid
+        report_id = cursor.lastrowid
 
-    row = cursor.execute(
-        """
-        SELECT
-            id,
-            project,
-            answers,
-            report,
-            created_at
-        FROM reports
-        WHERE id = ?
-        AND user_id = ?
-        """,
-        (
-            report_id,
-            user_id,
-        ),
-    ).fetchone()
+        return {
+            "message": "Report saved successfully.",
+            "report_id": report_id,
+        }
 
-    connection.close()
-
-    return {
-        "id": row["id"],
-        "project": row["project"],
-        "answers": json.loads(row["answers"]),
-        "report": row["report"],
-        "created_at": row["created_at"],
-    }
+    finally:
+        connection.close()
 
 
-@router.get("/", response_model=list[ReportResponse])
+@router.get("/")
 def get_reports(
-    user_id: int = Depends(get_current_user_id),
+    user_id: int = Depends(get_current_user),
 ):
-
     connection = get_connection()
 
-    cursor = connection.cursor()
+    try:
+        cursor = connection.cursor()
 
-    rows = cursor.execute(
-        """
-        SELECT
-            id,
-            project,
-            answers,
-            report,
-            created_at
-        FROM reports
-        WHERE user_id = ?
-        ORDER BY created_at DESC
-        """,
-        (user_id,),
-    ).fetchall()
+        reports = cursor.execute(
+            """
+            SELECT id, project, created_at
+            FROM reports
+            WHERE user_id = ?
+            ORDER BY created_at DESC
+            """,
+            (user_id,),
+        ).fetchall()
 
-    connection.close()
-
-    return [
-        {
-            "id": row["id"],
-            "project": row["project"],
-            "answers": json.loads(row["answers"]),
-            "report": row["report"],
-            "created_at": row["created_at"],
+        return {
+            "reports": [
+                {
+                    "id": report["id"],
+                    "project": report["project"],
+                    "created_at": report["created_at"],
+                }
+                for report in reports
+            ]
         }
-        for row in rows
-    ]
+
+    finally:
+        connection.close()
 
 
-@router.get("/{report_id}", response_model=ReportResponse)
+@router.get("/{report_id}")
 def get_report(
     report_id: int,
-    user_id: int = Depends(get_current_user_id),
+    user_id: int = Depends(get_current_user),
 ):
-
     connection = get_connection()
 
-    cursor = connection.cursor()
+    try:
+        cursor = connection.cursor()
 
-    row = cursor.execute(
-        """
-        SELECT
-            id,
-            project,
-            answers,
-            report,
-            created_at
-        FROM reports
-        WHERE id = ?
-        AND user_id = ?
-        """,
-        (
-            report_id,
-            user_id,
-        ),
-    ).fetchone()
+        report = cursor.execute(
+            """
+            SELECT id, project, report, created_at
+            FROM reports
+            WHERE id = ?
+            AND user_id = ?
+            """,
+            (
+                report_id,
+                user_id,
+            ),
+        ).fetchone()
 
-    connection.close()
+        if not report:
+            raise HTTPException(
+                status_code=404,
+                detail="Report not found.",
+            )
 
-    if not row:
-        raise HTTPException(
-            status_code=404,
-            detail="Report not found.",
-        )
+        return {
+            "id": report["id"],
+            "project": report["project"],
+            "report": report["report"],
+            "created_at": report["created_at"],
+        }
 
-    return {
-        "id": row["id"],
-        "project": row["project"],
-        "answers": json.loads(row["answers"]),
-        "report": row["report"],
-        "created_at": row["created_at"],
-    }
+    finally:
+        connection.close()

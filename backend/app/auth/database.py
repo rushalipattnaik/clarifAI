@@ -35,13 +35,9 @@ def initialize_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             project TEXT NOT NULL,
-            answers TEXT NOT NULL,
             report TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-            FOREIGN KEY (user_id)
-            REFERENCES users(id)
-            ON DELETE CASCADE
+            FOREIGN KEY (user_id) REFERENCES users(id)
         )
         """
     )
