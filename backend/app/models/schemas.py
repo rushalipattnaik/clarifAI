@@ -23,3 +23,18 @@ class TokenResponse(BaseModel):
 
     access_token: str
     token_type: str
+
+class CreateReportRequest(BaseModel):
+
+    project: str
+    answers: dict
+    report: str
+
+
+class ReportResponse(BaseModel):
+
+    id: int
+    project: str
+    answers: dict
+    report: str
+    created_at: str

@@ -5,6 +5,7 @@ import Questionnaire from "./pages/Questionnaire";
 import Report from "./pages/Report";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ReportHistory from "./pages/ReportHistory";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -13,12 +14,14 @@ function App() {
     <BrowserRouter>
       <Routes>
 
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
 
         <Route path="/login" element={<Login />} />
 
         <Route path="/signup" element={<Signup />} />
 
+        {/* Protected Routes */}
         <Route
           path="/questions"
           element={
@@ -33,6 +36,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Report />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <ReportHistory />
             </ProtectedRoute>
           }
         />
