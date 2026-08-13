@@ -1,9 +1,10 @@
+import json
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.auth.database import get_connection
 from app.auth.dependencies import get_current_user
 from app.models.schemas import CreateReportRequest
-
 
 router = APIRouter(
     prefix="/reports",
@@ -23,12 +24,18 @@ def create_report(
 
         cursor.execute(
             """
-            INSERT INTO reports (user_id, project, report)
-            VALUES (?, ?, ?)
+            INSERT INTO reports (
+                user_id,
+                project,
+                answers,
+                report
+            )
+            VALUES (?, ?, ?, ?)
             """,
             (
                 user_id,
                 request.project,
+                json.dumps(request.answers),
                 request.report,
             ),
         )
@@ -92,7 +99,7 @@ def get_report(
 
         report = cursor.execute(
             """
-            SELECT id, project, report, created_at
+            SELECT id, project, answers, report, created_at
             FROM reports
             WHERE id = ?
             AND user_id = ?
@@ -112,6 +119,7 @@ def get_report(
         return {
             "id": report["id"],
             "project": report["project"],
+            "answers": json.loads(report["answers"]),
             "report": report["report"],
             "created_at": report["created_at"],
         }
