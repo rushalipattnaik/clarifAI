@@ -35,21 +35,20 @@ function Questionnaire() {
   }
 
   async function nextQuestion() {
-    const currentQuestionId = questions[currentQuestion].id;
-    const selectedAnswer = answers[currentQuestionId];
+    const id = questions[currentQuestion].id;
 
-    if (!selectedAnswer) {
+    if (!answers[id]) {
       setError("Please select an answer before continuing.");
       return;
     }
 
     setError("");
 
-    // If this is the last question, generate the report.
     if (currentQuestion === questions.length - 1) {
       try {
         setIsGenerating(true);
 
+        // 1. Generate SRS
         const response = await api.post("/clarify/", {
           project: projectIdea,
           answers: answers,
@@ -59,32 +58,54 @@ function Questionnaire() {
           !response.data ||
           typeof response.data.report !== "string"
         ) {
-          throw new Error("Invalid report received from backend.");
+          throw new Error(
+            "Invalid report received from backend."
+          );
         }
 
-        setReport(response.data.report);
+        const generatedReport = response.data.report;
 
+        // 2. Save report to history
+        const saveResponse = await api.post("/reports/", {
+          project: projectIdea,
+          answers: answers,
+          report: generatedReport,
+        });
+
+        console.log("Report saved:", saveResponse.data);
+
+        // 3. Store report for current session
+        setReport(generatedReport);
+
+        // 4. Open report page
         navigate("/report");
-      } catch (error) {
-        console.error("Report generation failed:", error);
 
-        if (error.response) {
-          setError(
-            `Backend error: ${
-              error.response.data?.detail ||
-              "The server could not generate the report."
-            }`
-          );
-        } else if (error.request) {
+      } catch (err) {
+        console.error("Report generation failed:", err);
+
+        if (err.response?.data?.detail) {
+          const detail = err.response.data.detail;
+
+          if (Array.isArray(detail)) {
+            setError(
+              detail
+                .map((item) => item.msg)
+                .join(", ")
+            );
+          } else {
+            setError(detail);
+          }
+        } else if (err.request) {
           setError(
             "Unable to connect to the ClarifAI backend. Please make sure FastAPI is running."
           );
         } else {
           setError(
-            error.message ||
+            err.message ||
               "Something went wrong while generating the report."
           );
         }
+
       } finally {
         setIsGenerating(false);
       }
@@ -92,13 +113,12 @@ function Questionnaire() {
       return;
     }
 
-    // Move to the next question.
-    setCurrentQuestion((previous) => previous + 1);
+    setCurrentQuestion(currentQuestion + 1);
   }
 
   function previousQuestion() {
     if (currentQuestion > 0) {
-      setCurrentQuestion((previous) => previous - 1);
+      setCurrentQuestion(currentQuestion - 1);
       setError("");
     }
   }
@@ -118,16 +138,16 @@ function Questionnaire() {
           </span>
         </p>
 
+        <ProgressBar
+          current={currentQuestion + 1}
+          total={questions.length}
+        />
+
         {error && (
           <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-300">
             {error}
           </div>
         )}
-
-        <ProgressBar
-          current={currentQuestion + 1}
-          total={questions.length}
-        />
 
         <QuestionCard
           question={questions[currentQuestion]}
@@ -141,7 +161,9 @@ function Questionnaire() {
           onNext={nextQuestion}
           onPrevious={previousQuestion}
           isFirst={currentQuestion === 0}
-          isLast={currentQuestion === questions.length - 1}
+          isLast={
+            currentQuestion === questions.length - 1
+          }
           isGenerating={isGenerating}
         />
 
