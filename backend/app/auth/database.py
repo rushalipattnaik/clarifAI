@@ -1,6 +1,7 @@
 import sqlite3
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 DATABASE_PATH = BASE_DIR / "clarifai.db"
@@ -13,7 +14,6 @@ def get_connection():
 
 
 def initialize_database():
-
     connection = get_connection()
 
     cursor = connection.cursor()
@@ -35,6 +35,7 @@ def initialize_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             project TEXT NOT NULL,
+            answers TEXT NOT NULL,
             report TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)

@@ -23,11 +23,13 @@ class TokenResponse(BaseModel):
 
 class CreateReportRequest(BaseModel):
     project: str
+    answers: dict
     report: str
 
 
 class ReportResponse(BaseModel):
     id: int
     project: str
+    answers: dict
     report: str
     created_at: str
