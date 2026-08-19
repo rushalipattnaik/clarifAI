@@ -3,10 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Questionnaire from "./pages/Questionnaire";
 import Report from "./pages/Report";
+import ReportView from "./pages/ReportView";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ReportHistory from "./pages/ReportHistory";
-import PersistedReport from "./pages/PersistedReport";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -31,7 +31,6 @@ function App() {
           path="/signup"
           element={<Signup />}
         />
-
 
         {/* Protected Routes */}
 
@@ -66,7 +65,7 @@ function App() {
           path="/reports/:reportId"
           element={
             <ProtectedRoute>
-              <PersistedReport />
+              <ReportView />
             </ProtectedRoute>
           }
         />

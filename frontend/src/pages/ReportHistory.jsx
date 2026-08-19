@@ -15,10 +15,7 @@ function ReportHistory() {
 
         setReports(response.data.reports || []);
       } catch (err) {
-        console.error(
-          "Failed to load reports:",
-          err
-        );
+        console.error("Failed to load reports:", err);
 
         setError(
           err.response?.data?.detail ||
@@ -35,7 +32,7 @@ function ReportHistory() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
-        <p className="text-lg">
+        <p className="text-xl">
           Loading reports...
         </p>
       </div>
@@ -44,10 +41,9 @@ function ReportHistory() {
 
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-white">
-
       <div className="mx-auto max-w-5xl">
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-4">
 
           <div>
             <h1 className="text-4xl font-bold">
@@ -61,7 +57,7 @@ function ReportHistory() {
 
           <Link
             to="/questions"
-            className="rounded-lg bg-indigo-600 px-5 py-3 text-center font-medium transition hover:bg-indigo-500"
+            className="rounded-lg bg-indigo-600 px-5 py-3 font-medium transition hover:bg-indigo-500"
           >
             New Report
           </Link>
@@ -91,38 +87,36 @@ function ReportHistory() {
           </div>
         )}
 
-        {!error && reports.length > 0 && (
-          <div className="mt-8 space-y-4">
+        <div className="mt-8 space-y-4">
 
-            {reports.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-xl border border-slate-700 bg-slate-900 p-6 transition hover:border-slate-600"
+          {reports.map((item) => (
+            <div
+              key={item.id}
+              className="rounded-xl border border-slate-700 bg-slate-900 p-6 shadow-lg"
+            >
+
+              <h2 className="text-xl font-semibold">
+                {item.project}
+              </h2>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Created:{" "}
+                {new Date(item.created_at).toLocaleString()}
+              </p>
+
+              <Link
+                to={`/reports/${item.id}`}
+                className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 transition hover:bg-indigo-500"
               >
+                Open Report
+              </Link>
 
-                <h2 className="text-xl font-semibold">
-                  {item.project}
-                </h2>
+            </div>
+          ))}
 
-                <p className="mt-2 text-sm text-slate-500">
-                  Created: {item.created_at}
-                </p>
-
-                <Link
-                  to={`/reports/${item.id}`}
-                  className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 transition hover:bg-indigo-500"
-                >
-                  Open Report
-                </Link>
-
-              </div>
-            ))}
-
-          </div>
-        )}
+        </div>
 
       </div>
-
     </div>
   );
 }
