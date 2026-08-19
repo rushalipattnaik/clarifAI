@@ -15,7 +15,10 @@ function ReportHistory() {
 
         setReports(response.data.reports || []);
       } catch (err) {
-        console.error("Failed to load report history:", err);
+        console.error(
+          "Failed to load reports:",
+          err
+        );
 
         setError(
           err.response?.data?.detail ||
@@ -32,7 +35,7 @@ function ReportHistory() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
-        <p className="text-slate-400">
+        <p className="text-lg">
           Loading reports...
         </p>
       </div>
@@ -41,9 +44,11 @@ function ReportHistory() {
 
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-white">
+
       <div className="mx-auto max-w-5xl">
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
           <div>
             <h1 className="text-4xl font-bold">
               Report History
@@ -56,25 +61,23 @@ function ReportHistory() {
 
           <Link
             to="/questions"
-            className="inline-block rounded-lg bg-indigo-600 px-5 py-3 text-center font-medium transition hover:bg-indigo-500"
+            className="rounded-lg bg-indigo-600 px-5 py-3 text-center font-medium transition hover:bg-indigo-500"
           >
-            Create New Report
+            New Report
           </Link>
+
         </div>
 
         {error && (
-          <div className="mt-8 rounded-lg border border-red-800 bg-red-950/40 p-4 text-red-400">
+          <div className="mt-6 rounded-lg border border-red-800 bg-red-950/40 p-4 text-red-400">
             {error}
           </div>
         )}
 
         {!error && reports.length === 0 && (
           <div className="mt-10 rounded-xl border border-slate-700 bg-slate-900 p-8 text-center">
-            <h2 className="text-xl font-semibold">
-              No reports yet
-            </h2>
 
-            <p className="mt-2 text-slate-400">
+            <p className="text-slate-400">
               You haven't generated any reports yet.
             </p>
 
@@ -84,16 +87,19 @@ function ReportHistory() {
             >
               Create Your First Report
             </Link>
+
           </div>
         )}
 
         {!error && reports.length > 0 && (
           <div className="mt-8 space-y-4">
+
             {reports.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-slate-700 bg-slate-900 p-6 transition hover:border-indigo-500"
+                className="rounded-xl border border-slate-700 bg-slate-900 p-6 transition hover:border-slate-600"
               >
+
                 <h2 className="text-xl font-semibold">
                   {item.project}
                 </h2>
@@ -108,12 +114,15 @@ function ReportHistory() {
                 >
                   Open Report
                 </Link>
+
               </div>
             ))}
+
           </div>
         )}
 
       </div>
+
     </div>
   );
 }
