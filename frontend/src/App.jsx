@@ -1,4 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 import Home from "./pages/Home";
 import Questionnaire from "./pages/Questionnaire";
@@ -15,13 +19,25 @@ function App() {
       <Routes>
 
         {/* Public Routes */}
-        <Route path="/" element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
-        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+
 
         {/* Protected Routes */}
+
         <Route
           path="/questions"
           element={
@@ -45,6 +61,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ReportHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reports/:reportId"
+          element={
+            <ProtectedRoute>
+              <Report />
             </ProtectedRoute>
           }
         />
